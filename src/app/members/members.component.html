@@ -1,14 +1,10 @@
 <h2>Staff List</h2>
 <ul class="members">
   <!-- *ngFor="<Define a variable name> of <object name>"-->
-  <li
-    *ngFor="let member of members"
-    [class.selected]="member === selectedMember"
-    (click)="onSelect(member)"
-  >
-    <span class="badge">{{ member.id }}</span>{{ member.name }}
+  <li *ngFor="let member of members">
+    <a routerLink="/detail/{{ member.id }}">
+      <span class="badge">{{ member.id }}</span>{{ member.name }}
+    </a>
   </li>
 </ul>
 <hr>
-
-<app-member-detail [member]="selectedMember"></app-member-detail>

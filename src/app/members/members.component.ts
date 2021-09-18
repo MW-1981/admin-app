@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Member } from '../member';
+// import service
 import { MemberService } from '../member.service';
 
 
@@ -11,17 +12,14 @@ import { MemberService } from '../member.service';
 export class MembersComponent implements OnInit {
 
   members: Member[];
-  selectedMember: Member;
 
-  constructor(private memberService: MemberService) { }
+  constructor(
+    private memberService: MemberService,
+  ) { }
 
-  // componentが初期化されるタイミングで実行される
+  // called when this component is initialized.
   ngOnInit(): void {
     this.getMembers();
-  }
-
-  onSelect(member: Member): void {
-      this.selectedMember = member;
   }
 
   getMembers(): void {
