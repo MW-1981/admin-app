@@ -4,6 +4,7 @@ import { Member } from './member';
 import { MEMBERS } from './mock-members';
 import { MessageService } from './message.service';
 import { HttpClient } from '@angular/common/http';
+import { catchError, map, tap} from 'rxjs/operators'
 
 @Injectable({
   // root: can access this service from all this app.
@@ -24,8 +25,11 @@ export class MemberService {
 
   // use async method by 'rxjs'
   getMembers(): Observable<Member[]> {
-    this.messageService.add("MemberService: Member list is loaded.");
-    return this.http.get<Member[]>(this.membersUrl);
+    return this.http.get<Member[]>(this.membersUrl)
+      .pipe(
+        tap(members => this.log('Retrieved Staff Data')),
+        catchError(this.handleError<Member[]>('getMembers', []))
+      );
 //    return of(MEMBERS); // rxjs
   }
 
@@ -36,5 +40,15 @@ export class MemberService {
 
   private log(message: string) {
     this.messageService.add(`MemberService: ${message}`);
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any) : Observable<T> => {
+      console.error(error);
+
+      this.log(`${operation} failed: ${error.message}`);
+
+      return of(result as T);
+    }
   }
 }
