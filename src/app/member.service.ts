@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Member } from './member';
 import { MEMBERS } from './mock-members';
 import { MessageService } from './message.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap} from 'rxjs/operators'
 
 @Injectable({
@@ -13,6 +13,9 @@ import { catchError, map, tap} from 'rxjs/operators'
 export class MemberService {
 
   private membersUrl = 'api/members';
+  private httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  }
 
   constructor(
     private http: HttpClient,
@@ -34,8 +37,40 @@ export class MemberService {
   }
 
   getMember(id: number): Observable<Member> {
-    this.messageService.add(`MemberService: Get Member data No. ${id}.`);
-    return of(MEMBERS.find(member => member.id === id));
+    const url = `${this.membersUrl}/${id}`;
+    return this.http.get<Member>(url)
+    .pipe(
+      tap(_ => this.log(`Retrieved Staff Data (id: ${id})`)),
+      catchError(this.handleError<Member>(`getMember id=${id}`))
+    );
+//    return of(MEMBERS.find(member => member.id === id));
+  }
+
+  updateMember(member: Member): Observable<any> {
+    return this.http.put(this.membersUrl, member, this.httpOptions)
+    .pipe(
+      tap(_ => this.log(`Staff Data ${member.id} is Updated`)),
+      catchError(this.handleError<any>('updateMember'))
+    );
+  }
+
+  addMember(member: Member): Observable<Member> {
+    return this.http.post<Member>(this.membersUrl, member, this.httpOptions)
+    .pipe(
+      tap((newMember: Member) => this.log(`Staff Data ${newMember.id} is Added`)),
+      catchError(this.handleError<Member>('addMember'))
+    );
+  }
+
+  deleteMember(member: Member | number): Observable<Member> {
+    const id = typeof member === 'number' ? member : member.id;
+    const url = `${this.membersUrl}/${id}`;
+
+    return this.http.delete<Member>(url, this.httpOptions)
+    .pipe(
+      tap( _ => this.log(`Staff Data ${id} is Deleted`)),
+      catchError(this.handleError<Member>('deleteMember'))
+    )
   }
 
   private log(message: string) {
