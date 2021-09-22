@@ -70,7 +70,7 @@ export class MemberService {
     .pipe(
       tap( _ => this.log(`Staff Data ${id} is Deleted`)),
       catchError(this.handleError<Member>('deleteMember'))
-    )
+    );
   }
 
   searchMembers(term: string): Observable<Member[]> {
@@ -82,9 +82,7 @@ export class MemberService {
     .pipe(
       tap( _ => this.log(`Staff found which match search word ${term}.`)),
       catchError(this.handleError<Member[]>('searchMember', []))
-    )
-
-
+    );
   }
 
   private log(message: string) {

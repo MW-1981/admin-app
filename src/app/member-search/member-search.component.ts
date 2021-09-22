@@ -23,8 +23,11 @@ export class MemberSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.members$ = this.searchTerms.pipe(
+      // wait 300ms after keyboard input
       debounceTime(300),
+      // do not proceed if search term is not changed
       distinctUntilChanged(),
+      // when receive search term, it return the new Observable object
       switchMap((term: string) => this.memberService.searchMembers(term))
     )
   }
