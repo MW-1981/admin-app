@@ -73,6 +73,20 @@ export class MemberService {
     )
   }
 
+  searchMembers(term: string): Observable<Member[]> {
+    if (!term.trim()) {
+      return of([]); // RXJS
+    }
+
+    return this.http.get<Member[]>(`${this.membersUrl}/?name=${term}`)
+    .pipe(
+      tap( _ => this.log(`Staff found which match search word ${term}.`)),
+      catchError(this.handleError<Member[]>('searchMember', []))
+    )
+
+
+  }
+
   private log(message: string) {
     this.messageService.add(`MemberService: ${message}`);
   }
