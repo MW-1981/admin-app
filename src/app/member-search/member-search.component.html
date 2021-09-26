@@ -6,4 +6,13 @@
       <a routerLink="/detail/{{ member.id }}">{{ member.name }}</a>
     </li>
   </ul>
+
+  <h4><label for="search-box">Search Staff</label></h4>
+  <input type="text" id="search-box2" #searchBox2 (input)="search2(searchBox2.value)">
+  <ul class="search-result">
+    <li *ngFor="let member of members$ | async">
+      <a routerLink="/detail/{{ member.id }}">{{ member.name }}</a>
+    </li>
+  </ul>
+
 </div>

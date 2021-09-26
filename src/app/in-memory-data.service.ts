@@ -21,7 +21,13 @@ export class InMemoryDataService implements InMemoryDbService {
       { id: 20, name: 'Alex' }
     ]
 
-    return { members };
+    const books = [
+      { id: 1, title: 'Book 1'},
+      { id: 2, title: 'Book 2'},
+      { id: 3, title: 'Book 3'}
+    ]
+
+    return { members, books };
   }
 
   genId(members: Member[]) : number {
